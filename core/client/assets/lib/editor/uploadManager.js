@@ -94,11 +94,26 @@
                 replacement = '(http://)';
 
             if (match) {
-                // simple case, we have the parenthesis
-                editor.setSelection(
-                    {line: lineNumber, ch: match.index + 1},
-                    {line: lineNumber, ch: match.index + match[0].length - 1}
-                );
+
+                // do not replace with src already
+                if (match[0].length !== 9) {
+                    // set cursor to end and add new line
+                    // add ![]()
+                    // replace src
+                    editor.setCursor({line: lineNumber});
+                    editor.replaceSelection('\n![](http://)', {line: lineNumber});
+                    editor.setCursor({line: lineNumber + 1, ch: 0});
+                    editor.setSelection(
+                        {line: lineNumber +1, ch: 10},
+                        {line: lineNumber +1, ch: 17}
+                    );
+                } else {
+                    // simple case, we have the parenthesis
+                    editor.setSelection(
+                        {line: lineNumber, ch: match.index + 1},
+                        {line: lineNumber, ch: match.index + match[0].length - 1}
+                    );
+                }
             } else {
                 match = line.text.match(/\]/);
                 if (match) {
@@ -113,8 +128,7 @@
                     );
                 }
             }
-            //editor.replaceSelection(result_src);
-            editor.replaceSelection("Testing on next line" + "\r\n" + "Line two");
+            editor.replaceSelection(result_src);
         };
 
         // Change events from CodeMirror tell us which lines have changed.
