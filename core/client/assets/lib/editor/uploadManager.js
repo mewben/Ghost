@@ -113,7 +113,8 @@
                     );
                 }
             }
-            editor.replaceSelection(result_src);
+            //editor.replaceSelection(result_src);
+            editor.replaceSelection("Testing on next line" + "\r\n" + "Line two");
         };
 
         // Change events from CodeMirror tell us which lines have changed.
