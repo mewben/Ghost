@@ -136,6 +136,20 @@ frontendControllers = {
             });
         }).otherwise(handleError(next));
     },
+    'photogallery': function (req, res, next) {
+        var options = {
+            page: 1,
+            tag: 'photo-gallery'
+        };
+
+        return getPostPage(options).then(function (page) {
+            // Render the page of posts
+            filters.doFilter('prePostsRender', page.posts).then(function (posts) {
+                console.log(posts);
+                res.render('photo-gallery', formatPageResponse(posts, page));
+            });
+        }).otherwise(handleError(next));
+    },
     'single': function (req, res, next) {
         var path = req.path,
             params,

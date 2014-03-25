@@ -95,18 +95,13 @@
 
             if (match) {
 
-                // do not replace with src already
                 if (match[0].length !== 9) {
-                    // set cursor to end and add new line
-                    // add ![]()
-                    // replace src
-                    editor.setCursor({line: lineNumber});
-                    editor.replaceSelection('\n![](http://)', {line: lineNumber});
-                    editor.setCursor({line: lineNumber + 1, ch: 0});
-                    editor.setSelection(
-                        {line: lineNumber +1, ch: 10},
-                        {line: lineNumber +1, ch: 17}
-                    );
+                    // go to last line and append the images
+                    editor.setCursor({line: editor.lineCount() - 1});
+                    var cursor = editor.getCursor();
+
+                    editor.replaceRange('\r\n![](' + result_src + ')', CodeMirror.Pos(cursor.line));
+                    return;
                 } else {
                     // simple case, we have the parenthesis
                     editor.setSelection(
@@ -129,6 +124,7 @@
                 }
             }
             editor.replaceSelection(result_src);
+
         };
 
         // Change events from CodeMirror tell us which lines have changed.

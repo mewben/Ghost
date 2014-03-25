@@ -57,7 +57,13 @@ Post = ghostBookshelf.Model.extend({
 
         this.set('html', converter.makeHtml(this.get('markdown')));
 
-        // disabling sanitization until we can implement a better version
+        // get the first image and set it to image
+        var m = this.get('markdown').match(/\/.*\.jpg?/);
+        if (m) {
+            this.set('image', m[0]);
+        }
+
+       // disabling sanitization until we can implement a better version
         //this.set('title', this.sanitize('title').trim());
         this.set('title', this.get('title').trim());
 
