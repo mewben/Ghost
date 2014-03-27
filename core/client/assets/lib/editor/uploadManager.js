@@ -94,14 +94,20 @@
                 replacement = '(http://)';
 
             if (match) {
-
-                if (match[0].length !== 9) {
+                if (result_src !== 'http://' && match[0].length !== 9) {
                     // go to last line and append the images
                     editor.setCursor({line: editor.lineCount() - 1});
                     var cursor = editor.getCursor();
 
-                    editor.replaceRange('\r\n![](' + result_src + ')', CodeMirror.Pos(cursor.line));
-                    return;
+                    editor.replaceRange('\r\n![](http://)', CodeMirror.Pos(cursor.line));
+
+                    var m = editor.getLine(cursor.line + 1).match(/\([^\n]*\)?/);
+
+                    editor.setSelection(
+                        {line: cursor.line + 1, ch: m.index + 1},
+                        {line: cursor.line + 1, ch: m.index + m[0].length - 1}
+                    );
+
                 } else {
                     // simple case, we have the parenthesis
                     editor.setSelection(
