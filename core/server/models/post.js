@@ -11,6 +11,7 @@ var _              = require('lodash'),
     ghostBookshelf = require('./base'),
     validation     = require('../data/validation'),
     xmlrpc         = require('../xmlrpc'),
+    path           = require('path'),
 
     Post,
     Posts;
@@ -58,9 +59,11 @@ Post = ghostBookshelf.Model.extend({
         this.set('html', converter.makeHtml(this.get('markdown')));
 
         // get the first image and set it to image
-        var m = this.get('markdown').match(/\/.*\.jpg?/);
+        var m = this.get('markdown').match(/\/.*\.jpg?/i);
         if (m) {
-            this.set('image', m[0]);
+            var fname = m[0].match(/[^/]*$/);
+            var p = path.dirname(m[0]);
+            this.set('image', path.join(p, 'thumbnails', fname[0]));
         }
 
        // disabling sanitization until we can implement a better version
