@@ -22,27 +22,37 @@ localFileStore = _.extend(baseStore, {
     'save': function (image) {
         var saved = when.defer(),
             targetDir = this.getTargetDir(config().paths.imagesPath),
-            targetFilename;
+            targetFilename,
+            thumbnailDir;
         this.getUniqueFileName(this, image, targetDir).then(function (filename) {
             targetFilename = filename;
-            console.log(image);
-console.log(targetFilename);
+            thumbnailDir = path.join(targetDir, 'thumbnails');
 
             return nodefn.call(fs.mkdirs, targetDir);
         }).then(function () {
-            return nodefn.call(fs.mkdirs, path.join(targetDir, 'thumbnails'));
+            return nodefn.call(fs.mkdirs, thumbnailDir);
         }).then(function() {
-            return im.resize({
-                width: 2048,
-                height: 1366,
-                srcPath: image.path,
-                dstPath: targetFilename,
-                customArgs: ['-auto-orient']
-            });
-            //return nodefn.call(fs.copy, image.path, targetFilename);
+            return nodefn.call(fs.copy, image.path, targetFilename);
         }).then(function () {
             return nodefn.call(fs.unlink, image.path).otherwise(errors.logError);
         }).then(function () {
+            // get the filename
+            var fname = targetFilename.match(/[^/]*$/);
+            // thumbnail
+            im.resize({
+                width: 480,
+                height: 320,
+                srcPath: targetFilename,
+                dstPath: path.join(thumbnailDir, fname[0]),
+                customArgs: ['-auto-orient']
+            });
+            im.resize({
+                width: 2048,
+                height: 1366,
+                srcPath: targetFilename,
+                dstPath: targetFilename,
+                customArgs: ['-auto-orient']
+            });
 
             // The src for the image must be in URI format, not a file system path, which in Windows uses \
             // For local file system storage can use relative path so add a slash
