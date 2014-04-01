@@ -64,6 +64,11 @@ Post = ghostBookshelf.Model.extend({
             var fname = m[0].match(/[^/]*$/);
             var p = path.dirname(m[0]);
             this.set('image', path.join(p, 'thumbnails', fname[0]));
+        } else {
+            // get iframe for video embeds
+            var v = this.get('markdown').match(/<iframe.*?>.*<\/iframe>?/i);
+            if (v)
+                this.set('image', v[0]);
         }
 
        // disabling sanitization until we can implement a better version

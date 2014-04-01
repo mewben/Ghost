@@ -85,6 +85,8 @@ frontendControllers = {
 
             // Render the page of posts
             filters.doFilter('prePostsRender', page.posts).then(function (posts) {
+                console.log(formatPageResponse(posts, page));
+                console.log('here');
                 res.render('index', formatPageResponse(posts, page));
             });
         }).otherwise(handleError(next));
@@ -136,17 +138,16 @@ frontendControllers = {
             });
         }).otherwise(handleError(next));
     },
-    'photogallery': function (req, res, next) {
+    'gallery': function (req, res, next) {
         var options = {
             page: 1,
-            tag: 'photo-gallery'
+            tag: 'gallery'
         };
 
         return getPostPage(options).then(function (page) {
             // Render the page of posts
             filters.doFilter('prePostsRender', page.posts).then(function (posts) {
-                console.log(posts);
-                res.render('photo-gallery', formatPageResponse(posts, page));
+                res.render('gallery', formatPageResponse(posts, page));
             });
         }).otherwise(handleError(next));
     },
