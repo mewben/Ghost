@@ -86,12 +86,13 @@ frontendControllers = {
 
             function render() {
                 filters.doFilter('prePostsRender', post).then(function (post) {
-                    api.settings.read('activeTheme').then(function (activeTheme) {
-                        var paths = config().paths.availableThemes[activeTheme.value],
-                            view = template.getThemeViewForPost(paths, post);
+                    /*api.settings.read('activeTheme').then(function (activeTheme) {
+                        //var paths = config().paths.availableThemes[activeTheme.value],
+                        //    view = template.getThemeViewForPost(paths, post);
 
                         res.render(view, {post: post});
-                    });
+                    });*/
+                    res.render('index', {post: post});
                 });
             }
 

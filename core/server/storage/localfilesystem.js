@@ -40,8 +40,8 @@ localFileStore = _.extend(baseStore, {
             var fname = targetFilename.match(/[^/]*$/);
             // thumbnail
             im.resize({
-                width: 480,
-                height: 320,
+                width: 337,
+                height: 225,
                 srcPath: targetFilename,
                 dstPath: path.join(thumbnailDir, fname[0]),
                 customArgs: ['-auto-orient']
