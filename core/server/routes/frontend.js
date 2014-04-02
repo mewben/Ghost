@@ -11,7 +11,7 @@ module.exports = function (server) {
     server.get('/tag/:slug/page/:page/', frontend.tag);
     server.get('/tag/:slug/', frontend.tag);
     server.get('/page/:page/', frontend.homepage);
-    server.get('/gallery', frontend.gallery);
+    server.get('/photo-gallery', frontend.gallery);
     server.get('/', frontend.homepage);
     server.get('*', frontend.single);
 };

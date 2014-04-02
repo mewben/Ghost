@@ -76,7 +76,31 @@ frontendControllers = {
             return res.redirect(config().paths.subdir + '/');
         }
 
-        return getPostPage(options).then(function (page) {
+        api.settings.read('permalinks').then(function (permalink) {
+            return api.posts.read({slug: 'artline-studio'});
+        }).then(function (post) {
+
+            if (!post) {
+                return next();
+            }
+
+            function render() {
+                filters.doFilter('prePostsRender', post).then(function (post) {
+                    api.settings.read('activeTheme').then(function (activeTheme) {
+                        var paths = config().paths.availableThemes[activeTheme.value],
+                            view = template.getThemeViewForPost(paths, post);
+
+                        res.render(view, {post: post});
+                    });
+                });
+            }
+
+            render();
+
+        });
+
+
+/*        return getPostPage(options).then(function (page) {
 
             // If page is greater than number of pages we have, redirect to last page
             if (pageParam > page.pages) {
@@ -85,11 +109,9 @@ frontendControllers = {
 
             // Render the page of posts
             filters.doFilter('prePostsRender', page.posts).then(function (posts) {
-                console.log(formatPageResponse(posts, page));
-                console.log('here');
                 res.render('index', formatPageResponse(posts, page));
             });
-        }).otherwise(handleError(next));
+        }).otherwise(handleError(next));*/
     },
     'tag': function (req, res, next) {
         // Parse the page number
@@ -147,6 +169,7 @@ frontendControllers = {
         return getPostPage(options).then(function (page) {
             // Render the page of posts
             filters.doFilter('prePostsRender', page.posts).then(function (posts) {
+                console.log(posts);
                 res.render('gallery', formatPageResponse(posts, page));
             });
         }).otherwise(handleError(next));
